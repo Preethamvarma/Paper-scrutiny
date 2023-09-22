@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+
+      <!-- Include Bootstrap JavaScript -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+
+      <!-- Bootstrap CSS -->
+         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+               <script src="https://kit.fontawesome.com/727dd170d4.js" crossorigin="anonymous"></script>
+
+    <title>Paper Scrutiny</title>
+    <style>
+
+      body{
+         font-family: math;
+      }
+        .head {
+            color: goldenrod;
+            text-decoration: none;
+            font-size: 30px;
+            padding-right: 5%;
+        }
+
+        .drag-drop-zone {
+            border: 3px dashed #ccc;
+            padding: 50px;
+            text-align: center;
+            cursor: pointer;
+            width: 50%;
+            height: 20%;
+            background-color: white;
+        }
+
+        p{
+         padding-top: 10px;
+        }
+
+        #file-list {
+            list-style: none;
+        }
+
+        #file-list li {
+            margin-bottom: 10px;
+        }
+
+        .container-sm{
+         margin-top: 10px;
+        }
+        label{
+         color: crimson;
+        }
+         .card-header{
+            background-color: goldenrod;
+         }
+         .card-body{
+            background-color: ivory;
+            font-size: x-large;
+         }
+         textarea{
+            resize: both;
+         }
+         /* Style the container */
+        .textarea-container {
+            position: relative;
+            width: 30%; /* Adjust the width as needed */
+        }
+
+        /* Style the textarea */
+        #englishText {
+            width: 100%;
+            height: 100px; /* Adjust the height as needed */
+            padding-right: 30px; /* Reserve space for the icon */
+        }
+
+        /* Style the icon */
+        .icon {
+            position: absolute;
+            bottom: 10px; /* Adjust the vertical position */
+            right: 10px; /* Adjust the horizontal position */
+            color: #888; /* Icon color */
+            cursor: pointer;
+        }
+        #navbarNav{
+         font-size: 20px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="header">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="head">Paper Scrutiny</div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard.html">Dashborad</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="index.html">Upload <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="search.html">Search</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Log Out</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div class="container-sm">
+    <div class="card">
+        <div class="card-header">
+            <h2 style="text-align: center; color:brown;"><b>TS Intelligence</b></h2>
+        </div>
+        <div class="card-body">
+            <form action="upload.php" method="post" enctype="multipart/form-data">
+                <label for="date"><u><b>Please Select the Date</b></u></label>
+                <br>
+                <input type="date" id="date" name="date" required>
+                <br><br>
+                <label for="text"><u><b>Please Input the text</b></u></label>
+                <br>
+                <div class="textarea-container">
+                <textarea id="englishText" name="englishText" rows="6" cols="30"
+                          placeholder="Please Input your Text here" required>
+                          </textarea>
+                          <span class ="icon" id="click_to_record"><i class="fa-solid fa-microphone"></i></span>
+               </div>
+                <br><br>
+                <label for="file"><b><u>Please Upload Your Images here</u></b></label>
+                <br>
+                <div class="drag-drop-zone" id="drag-drop-zone">
+                    <p>Drag & Drop files here or click to select files</p>
+                    <input type="file" id="images" name="images[]" multiple style="display: none;">
+                </div>
+                <ul id="file-list"></ul>
+                <br><br>
+                <input class="btn btn-primary btn-lg" type="submit" value="Submit" id="submitbtn">
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<script>
+    // JavaScript code for drag-and-drop functionality
+    const dropZone = document.getElementById('drag-drop-zone');
+    const fileInput = document.getElementById('images');
+    const fileList = document.getElementById('file-list');
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('active');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('active');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('active');
+        const files = e.dataTransfer.files;
+
+        // Display the list of dropped files
+        for (let i = 0; i < files.length; i++) {
+            const listItem = document.createElement('li');
+            listItem.textContent = files[i].name;
+            fileList.appendChild(listItem);
+        }
+
+        // You can also store the dropped files in a JavaScript array and handle them in your form submission logic
+    });
+
+    // Trigger file input click when clicking on the drop zone
+    dropZone.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    // Handle file selection from file input (optional)
+    fileInput.addEventListener('change', () => {
+        // You can add code to handle file selection if needed
+      fileList.innerHTML = '';
+
+      // Display the list of selected files
+    const files = fileInput.files;
+    for (let i = 0; i < files.length; i++) {
+        const listItem = document.createElement('li');
+        listItem.textContent = files[i].name;
+        fileList.appendChild(listItem);
+    }
+    });
+
+
+    // Javascript code for voice-to-text
+         const englishText = document.getElementById('englishText');
+        const micButton = document.getElementById('click_to_record');
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.interimResults = true;
+        let isListening = false;
+        let currentText = '';
+        let accumulatedText = '';
+
+        recognition.addEventListener('result', e => {
+            const lastResult = e.results[e.results.length - 1][0].transcript;
+            currentText = lastResult;
+        });
+
+        recognition.addEventListener('end', () => {
+            if (isListening) {
+                accumulatedText += currentText + ' ';
+                englishText.value = accumulatedText;
+                currentText = '';
+                recognition.start(); // Continue recognition if it was stopped intentionally
+            }
+        });
+
+        micButton.addEventListener('click', () => {
+            isListening = !isListening; // Toggle speech recognition on button click
+
+            if (isListening) {
+                accumulatedText = '';
+                currentText = '';
+                recognition.start();
+                micButton.innerHTML = '<i class="fas fa-microphone-slash"></i>'; // Change icon to indicate "stop"
+            } else {
+                recognition.stop();
+                micButton.innerHTML = '<i class="fas fa-microphone"></i>'; // Change icon to indicate "start"
+            }
+        });
+     
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>
